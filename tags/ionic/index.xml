@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>ionic on SPERIXLABS</title>
+    <link>/tags/ionic/</link>
+    <description>Recent content in ionic on SPERIXLABS</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>SPERIXLABS</copyright>
+    <lastBuildDate>Sun, 10 Jan 2021 17:21:02 +0000</lastBuildDate><atom:link href="/tags/ionic/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Possible Implementation Flaws in Mobile Applications: A Security Audit of a Bank&#39;s Mobile Application</title>
+      <link>/post/2021/01/possible-implementation-flaws-in-mobile-applications-a-security-audit-of-a-banks-mobile-application/</link>
+      <pubDate>Sun, 10 Jan 2021 17:21:02 +0000</pubDate>
+      
+      <guid>/post/2021/01/possible-implementation-flaws-in-mobile-applications-a-security-audit-of-a-banks-mobile-application/</guid>
+      <description>Abstract This research presents a security flaw in a Bank&amp;rsquo;s mobile application (both iOS and Android). The flaw enables one to verify if a user has registered on the mobile application, reset a user&amp;rsquo;s password, change a user&amp;rsquo;s pin code, bypass OTP for payment authorisation, reset a user&amp;rsquo;s password using the customer&amp;rsquo;s email and a temporary userid, change a user&amp;rsquo;s pin code using the actual userid and phantom keys, bypass bank-to-momo transaction fees, generate cardless tokens for third-paties without code validation, set a new pin in the mobile application without validating the old pin and also perform a purchase of airtime using a valid customer&amp;rsquo;s userid and phantom keys without transaction code verification.</description>
+    </item>
+    
+  </channel>
+</rss>

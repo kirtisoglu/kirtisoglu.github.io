@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="Jay Lux Ferro ">
+<meta name="description" content="Abstract This research presents a security flaw in a Bank&amp;rsquo;s mobile application (both iOS and Android). The flaw enables one to verify if a user has registered on the mobile application, reset a user&amp;rsquo;s password, change a user&amp;rsquo;s pin code, bypass OTP for payment authorisation, reset a user&amp;rsquo;s password using the customer&amp;rsquo;s email and a temporary userid, change a user&amp;rsquo;s pin code using the actual userid and phantom keys, bypass bank-to-momo transaction fees, generate cardless tokens for third-paties without code validation, set a new pin in the mobile application without validating the old pin and also perform a purchase of airtime using a valid customer&amp;rsquo;s userid and phantom keys without transaction code verification." />
+<meta name="keywords" content="research, cybersecurity, Android, iOS, Security, Audit, ionic" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="/post/bank/" />
+
+
+    <title>
+        
+            How I Hacked a Bank :: SPERIXLABS 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.d7bdd8ee18bfbf4c605488a7e5b1b92cd980dfeed2bdaeab4dd5e931a7a78bc0.css">
+
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#1b1c1d">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="#1b1c1d">
+    <meta name="theme-color" content="#1b1c1d">
+
+
+
+<meta itemprop="name" content="How I Hacked a Bank">
+<meta itemprop="description" content="Abstract This research presents a security flaw in a Bank&rsquo;s mobile application (both iOS and Android). The flaw enables one to verify if a user has registered on the mobile application, reset a user&rsquo;s password, change a user&rsquo;s pin code, bypass OTP for payment authorisation, reset a user&rsquo;s password using the customer&rsquo;s email and a temporary userid, change a user&rsquo;s pin code using the actual userid and phantom keys, bypass bank-to-momo transaction fees, generate cardless tokens for third-paties without code validation, set a new pin in the mobile application without validating the old pin and also perform a purchase of airtime using a valid customer&rsquo;s userid and phantom keys without transaction code verification.">
+<meta itemprop="datePublished" content="2021-01-10T17:21:02+00:00" />
+<meta itemprop="dateModified" content="2021-01-10T17:21:02+00:00" />
+<meta itemprop="wordCount" content="828">
+<meta itemprop="image" content="/"/>
+
+
+
+<meta itemprop="keywords" content="Android,iOS,Security,Audit,ionic," />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="/"/>
+
+<meta name="twitter:title" content="How I Hacked a Bank"/>
+<meta name="twitter:description" content="Abstract This research presents a security flaw in a Bank&rsquo;s mobile application (both iOS and Android). The flaw enables one to verify if a user has registered on the mobile application, reset a user&rsquo;s password, change a user&rsquo;s pin code, bypass OTP for payment authorisation, reset a user&rsquo;s password using the customer&rsquo;s email and a temporary userid, change a user&rsquo;s pin code using the actual userid and phantom keys, bypass bank-to-momo transaction fees, generate cardless tokens for third-paties without code validation, set a new pin in the mobile application without validating the old pin and also perform a purchase of airtime using a valid customer&rsquo;s userid and phantom keys without transaction code verification."/>
+
+
+
+
+    <meta property="og:title" content="How I Hacked a Bank" />
+<meta property="og:description" content="Abstract This research presents a security flaw in a Bank&rsquo;s mobile application (both iOS and Android). The flaw enables one to verify if a user has registered on the mobile application, reset a user&rsquo;s password, change a user&rsquo;s pin code, bypass OTP for payment authorisation, reset a user&rsquo;s password using the customer&rsquo;s email and a temporary userid, change a user&rsquo;s pin code using the actual userid and phantom keys, bypass bank-to-momo transaction fees, generate cardless tokens for third-paties without code validation, set a new pin in the mobile application without validating the old pin and also perform a purchase of airtime using a valid customer&rsquo;s userid and phantom keys without transaction code verification." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/post/bank/" />
+<meta property="og:image" content="/"/>
+<meta property="article:published_time" content="2021-01-10T17:21:02+00:00" />
+<meta property="article:modified_time" content="2021-01-10T17:21:02+00:00" />
+
+
+
+
+    <meta property="article:section" content="Reverse Engineering" />
+
+
+
+    <meta property="article:published_time" content="2021-01-10 17:21:02 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">&gt;</span>
+            <span class="logo__text">$ cd ~/home/</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/post/">Blog</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="/post/bank/">How I Hacked a Bank</a></h2>
+
+            
+            
+            
+
+            <div class="post-content">
+                <h3 id="abstract">Abstract</h3>
+<p>This research presents a security flaw in a Bank&rsquo;s mobile application (both iOS and Android). The flaw enables one to verify if a user has registered on the mobile application, reset a user&rsquo;s password, change a user&rsquo;s pin code, bypass OTP for payment authorisation, reset a user&rsquo;s password using the customer&rsquo;s email and a temporary userid, change a user&rsquo;s pin code using the actual userid and phantom keys, bypass bank-to-momo transaction fees, generate cardless tokens for third-paties without code validation, set a new pin in the mobile application without validating the old pin and also perform a purchase of airtime using a valid customer&rsquo;s userid and phantom keys without transaction code verification.
+The platform used for the assessment was iOS. Both platforms (iOS and Android) are affected by this flaw due the fact that they were built using a cross-platform framework (ionic).</p>
+<h3 id="technical-details">Technical Details</h3>
+<p>The Bank’s iOS mobile application presents a user with an option to reset his password by providing his email address.
+This password reset mechanism can be used to determine if a user is signed up on the mobile application or not. A sample password request format is shown below.
+
+
+<p></p>
+<img src='/img/bankhack/pwd.jpg' />
+
+</p>
+<p>If the email belongs to a valid user, an OTP is sent to the user’s phone to continue with the password reset. A sample response for a valid user’s email is shown below:
+
+
+<p></p>
+<img src='/img/bankhack/pwd1.jpg' />
+
+</p>
+<p>A valid response returns a <strong>USERID</strong> as shown above. This ID is stored on the user’s mobile device and used in any subsequent requests.</p>
+<p>With the user’s ID gotten, one can figure out the number of accounts that a user has added in the mobile application. A sample request and response are shown below:
+
+
+<p></p>
+<img src='/img/bankhack/25.jpg' />
+<img src='/img/bankhack/27.jpg' />
+
+</p>
+<p>It can be seen that the user in the image above has a mobile money number linked to his account.</p>
+<p>With the known email address and the user id, the account of the user can be reset (as shown below); which will enable an unauthorised user to log in to the application as a valid user.
+
+
+<p></p>
+<img src='/img/bankhack/29.jpg' />
+<img src='/img/bankhack/31.jpg' />
+
+</p>
+<p>A successful log in returns a response that contains the user’s account details and a <strong>phantom</strong> which is also attached to the user id for subsequent requests.
+
+
+<p></p>
+<img src='/img/bankhack/33.jpg' />
+
+</p>
+<p>The pin code of the user is required in the transfer of money. When a user enter’s his pin code in the application, it’s <strong>base64</strong> encoded and sent to the API endpoint. After gaining unauthorised access to a user’s account, his pin code can be reset to any other 4 digit number; this is shown below.
+
+
+<p></p>
+<img src='/img/bankhack/35.jpg' />
+<img src='/img/bankhack/37.jpg' />
+<img src='/img/bankhack/39.jpg' />
+
+</p>
+<p>In the transfer of money, an OTP is sent to the user for verification before the transaction is initiated and completed. It was interesting to know that a sample request can be crafted without going through the OTP verification process.</p>
+<ol>
+<li>The parameters of the crafted payment payload includes:</li>
+<li>The source account; which can be found from the initial authentication response.</li>
+<li>The destination account; which can be any account number or mobile money number that the person wants to transfer the money to.</li>
+<li>The pin code; which is encoded as base64</li>
+<li>The amount</li>
+<li>The user id and the phantom.</li>
+</ol>
+<p>A sample request and response of a successful money transfer that bypasses OTP is shown below:
+
+
+<p></p>
+<img src='/img/bankhack/41.jpg' />
+<img src='/img/bankhack/43.jpg' />
+
+</p>
+<p>After reporting the flaw discussed above, the developers decided to use a temporary userid. It was still realized that a user’s account password can be reset once a password reset is initiated using the user’s email. The response returns a temporary userid which can be used in setting a new password for the user.
+
+
+<p></p>
+<img src='/img/bankhack/53.png' />
+
+</p>
+<p>A sample password reset response is shown below:
+
+
+<p></p>
+<img src='/img/bankhack/55.png' />
+
+</p>
+<p>Using the temporary userid, a new password is set for the user.
+
+
+<p></p>
+<img src='/img/bankhack/57.png' />
+<img src='/img/bankhack/59.png' />
+
+</p>
+<p>Once the password reset is completed, an authentication request can be initiated to acquire the user’s actual userid and the phantom keys.
+
+
+<p></p>
+<img src='/img/bankhack/61.png' />
+<img src='/img/bankhack/63.png' />
+
+</p>
+<p>Using the acquired userid and phantom key, a new user pin code can be set.
+
+
+<p></p>
+<img src='/img/bankhack/65.png' />
+<img src='/img/bankhack/67.png' />
+
+</p>
+<p>For bank-to-momo transactions, one can bypass transaction charges by setting the paywith option from ‘MTNTRANSFER’ to ‘MTNOWNTRANSFER’ after OTP has been validated.
+
+
+<p></p>
+<img src='/img/bankhack/69.png' />
+<img src='/img/bankhack/71.png' />
+
+</p>
+<p>It is possible for an unauthorised user to generate a cardless token if he knows the userid and phantom keys of a valid user. Cardless tokens are not validated using the transaction code.
+
+
+<p></p>
+<img src='/img/bankhack/73.png' />
+
+</p>
+<p>It was realised that there is no validation for the old pin when a user tries to set a new pin. Due to this, a user who gains unauthorised access can just reset a user’s pin by just providing any 4 digit pin for the ‘Old Pin’ field.
+
+
+<p></p>
+<img src='/img/bankhack/75.png' />
+
+</p>
+<p>In the figure above, the same password is provided for ‘oldpin’ and ‘newpin’. This enables one to set a new pin without validating the old one.
+
+
+<p></p>
+<img src='/img/bankhack/77.png' />
+<img src='/img/bankhack/79.png' />
+
+</p>
+<p>The transaction code for the purchase of airtime is not validated in the purchase request; hence an unauthorised user can remove it from the request. This bypasses the use of the OTP, hence an unauthorised user with a valid userid and phantom keys can initiate such purchase.
+
+
+<p></p>
+<img src='/img/bankhack/81.png' />
+
+</p>
+<p>The image below shows a successful transaction.
+
+
+<p></p>
+<img src='/img/bankhack/ll.png' />
+
+</p>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+            
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="/tags/android/">Android</a></span>
+        <span class="tag"><a href="/tags/ios/">iOS</a></span>
+        <span class="tag"><a href="/tags/security/">Security</a></span>
+        <span class="tag"><a href="/tags/audit/">Audit</a></span>
+        <span class="tag"><a href="/tags/ionic/">ionic</a></span>
+        
+    </p>
+
+            
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-folder meta-icon"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+
+        <span class="tag"><a href="/categories/reverse-engineering/">Reverse Engineering</a></span>
+        
+    </p>
+
+  		</div>
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2021</span>
+            <span><a href="/">Jay Lux Ferro</a></span>
+            <span>SPERIXLABS</span><span><a href="/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Your Security</span>
+            <span>Our Priority</span>
+          </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.af435e44374f1e99a669ea8cd5bb9a2fceed80588941a451bfddb66b86a67c9f40b0f417e9543a763f809aa7e9300d7b1d69bf99615810ba02ac70396d50fad5.js" integrity="sha512-r0NeRDdPHpmmaeqM1buaL87tgFiJQaRRv922a4amfJ9AsPQX6VQ6dj&#43;AmqfpMA17HWm/mWFYELoCrHA5bVD61Q=="></script>
+
+
+
+    </body>
+</html>

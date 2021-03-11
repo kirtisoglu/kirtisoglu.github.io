@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="Jay Lux Ferro ">
+<meta name="description" content="Abstract The Academic Information Manager (AIM) is the official mobile application for KNUST students. The key functions of AIM include: course registration, checking of results, editing of personal records, access to news from the University&amp;rsquo;s website, notifications and checking of fees. This research presents a flaw in the bearer authorization token implementation in the REST API for the AIM app. This authorization token is not validated per user basis, hence can be exploited to access or modify any student&amp;rsquo;s information through the REST API." />
+<meta name="keywords" content="research, cybersecurity, Android, Security, Audit" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="/post/knust-aim/" />
+
+
+    <title>
+        
+            Security Flaw in the KNUST AIM Application :: SPERIXLABS 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.d7bdd8ee18bfbf4c605488a7e5b1b92cd980dfeed2bdaeab4dd5e931a7a78bc0.css">
+
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#1b1c1d">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="#1b1c1d">
+    <meta name="theme-color" content="#1b1c1d">
+
+
+
+<meta itemprop="name" content="Security Flaw in the KNUST AIM Application">
+<meta itemprop="description" content="Abstract The Academic Information Manager (AIM) is the official mobile application for KNUST students. The key functions of AIM include: course registration, checking of results, editing of personal records, access to news from the University&rsquo;s website, notifications and checking of fees. This research presents a flaw in the bearer authorization token implementation in the REST API for the AIM app. This authorization token is not validated per user basis, hence can be exploited to access or modify any student&rsquo;s information through the REST API.">
+<meta itemprop="datePublished" content="2019-09-20T23:12:53+00:00" />
+<meta itemprop="dateModified" content="2019-09-20T23:12:53+00:00" />
+<meta itemprop="wordCount" content="247">
+<meta itemprop="image" content="/"/>
+
+
+
+<meta itemprop="keywords" content="Android,Security,Audit," />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="/"/>
+
+<meta name="twitter:title" content="Security Flaw in the KNUST AIM Application"/>
+<meta name="twitter:description" content="Abstract The Academic Information Manager (AIM) is the official mobile application for KNUST students. The key functions of AIM include: course registration, checking of results, editing of personal records, access to news from the University&rsquo;s website, notifications and checking of fees. This research presents a flaw in the bearer authorization token implementation in the REST API for the AIM app. This authorization token is not validated per user basis, hence can be exploited to access or modify any student&rsquo;s information through the REST API."/>
+
+
+
+
+    <meta property="og:title" content="Security Flaw in the KNUST AIM Application" />
+<meta property="og:description" content="Abstract The Academic Information Manager (AIM) is the official mobile application for KNUST students. The key functions of AIM include: course registration, checking of results, editing of personal records, access to news from the University&rsquo;s website, notifications and checking of fees. This research presents a flaw in the bearer authorization token implementation in the REST API for the AIM app. This authorization token is not validated per user basis, hence can be exploited to access or modify any student&rsquo;s information through the REST API." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/post/knust-aim/" />
+<meta property="og:image" content="/"/>
+<meta property="article:published_time" content="2019-09-20T23:12:53+00:00" />
+<meta property="article:modified_time" content="2019-09-20T23:12:53+00:00" />
+
+
+
+
+    <meta property="article:section" content="Reverse Engineering" />
+
+
+
+    <meta property="article:published_time" content="2019-09-20 23:12:53 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">&gt;</span>
+            <span class="logo__text">$ cd ~/home/</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/post/">Blog</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="/post/knust-aim/">Security Flaw in the KNUST AIM Application</a></h2>
+
+            
+            
+            
+
+            <div class="post-content">
+                <h3 id="abstract">Abstract</h3>
+<p>The Academic Information Manager (AIM) is the official mobile application for KNUST students. The key functions of AIM include: course registration, checking of results, editing of personal records, access to news from the University&rsquo;s website, notifications and checking of fees. This research presents a flaw in the bearer authorization token implementation in the REST API for the AIM app. This authorization token is not validated per user basis, hence can be exploited to access or modify any student&rsquo;s information through the REST API.
+
+
+<br/>
+<br/>
+<img src="/img/knustaim/logo.jpg" style="width: 450px;"/>
+<br/>
+
+</p>
+<h3 id="security-flaw">Security Flaw</h3>
+<p>This section explains the details of the security flaw.</p>
+<h4 id="application-version">Application Version</h4>
+<p><strong>Operating System</strong>: Android 
+<br/>
+
+<strong>Version</strong>: 1.0.13.2
+<br/>
+
+<strong>Release Date</strong>: 18th September, 2018 
+<br/>
+
+
+
+<p></p>
+<img src="/img/knustaim/signature.png" style=""/>
+
+</p>
+<p>The REST API base url for the AIM application is</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">https://apps.knust.edu.gh/StudentAPI/
+</code></pre></div><p>This is shown below.
+
+
+<p></p>
+<img src="/img/knustaim/url.png"/>
+
+</p>
+<p>The AIM REST API uses bearer token to allow access to the associated resources [1]. The implementation of the bearer token verification in the mobile application is shown below.
+
+
+<p></p>
+<img src="/img/knustaim/auth.png"/>
+
+</p>
+<p>The bearer token is generated when a user logs in with his reference number and password. The parameters for the REST API is shown below.
+
+
+<p></p>
+<img src="/img/knustaim/token.png"/>
+
+</p>
+<p>A sample C# implementation of the authentication request and the token generated are shown below.
+
+
+<p></p>
+<img src="/img/knustaim/loginCode.png"/><br/>
+<img src="/img/knustaim/bearerToken.png"/>
+
+</p>
+<p>The bearer token is a very good security implementation. The problem lies in the fact that a valid bearer token of a particular student can be used to access or modify other students' information once the reference number is known.</p>
+<h3 id="references">References</h3>
+<ol>
+<li>RFC670, &ldquo;The OAuth 2.0 Authorization Framework: Bearer Token Usage&rdquo;, Internet Engineering Task Force (IETF), 2012.</li>
+</ol>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+            
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="/tags/android/">Android</a></span>
+        <span class="tag"><a href="/tags/security/">Security</a></span>
+        <span class="tag"><a href="/tags/audit/">Audit</a></span>
+        
+    </p>
+
+            
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-folder meta-icon"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+
+        <span class="tag"><a href="/categories/reverse-engineering/">Reverse Engineering</a></span>
+        
+    </p>
+
+  		</div>
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2021</span>
+            <span><a href="/">Jay Lux Ferro</a></span>
+            <span>SPERIXLABS</span><span><a href="/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Your Security</span>
+            <span>Our Priority</span>
+          </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.af435e44374f1e99a669ea8cd5bb9a2fceed80588941a451bfddb66b86a67c9f40b0f417e9543a763f809aa7e9300d7b1d69bf99615810ba02ac70396d50fad5.js" integrity="sha512-r0NeRDdPHpmmaeqM1buaL87tgFiJQaRRv922a4amfJ9AsPQX6VQ6dj&#43;AmqfpMA17HWm/mWFYELoCrHA5bVD61Q=="></script>
+
+
+
+    </body>
+</html>
