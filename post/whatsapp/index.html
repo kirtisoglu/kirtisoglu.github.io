@@ -14,7 +14,7 @@
 
     <title>
         
-            A Security Analysis of WhatsApp iOS Mobile Application :: SPERIXLABS 
+            A Security Analysis of WhatsApp iOS Mobile Application 
         
     </title>
 
@@ -146,6 +146,7 @@
 
             <div class="post-content">
                 <h3 id="abstract">Abstract</h3>
+                <!--
 <p>This research presents an investigation into  WhatsApp&rsquo;s on-device data storage on iOS. WhatsApp is one of the most widely used messaging application and hence it is required that a secured on-device storage mechanism be implemented to complement Apple&rsquo;s security measures for their devices. This will help protect a user&rsquo;s data  in instances where his/her device is compromised physically. The research presents a security analysis on the storage format of data used by WhatsApp on end-users' devices.</p>
 <h3 id="introduction">Introduction</h3>
 <p>The team behind <strong>Uc0ver</strong> [1] released an iOS 11.0 - 13.5.5 jailbreak for all iPhones and iPads. This is the first iOS jailbreak in years to use a 0-day exploit as previous tools relied on a 1-day exploit or other security lapses from Apple&rsquo;s part [2].</p>
@@ -157,43 +158,43 @@
 <h3 id="security-analysis">Security Analysis</h3>
 <p>The WhatsApp version used in this research was <strong>2.20.52.7</strong>. A brief content of the application&rsquo;s <strong>info.plist</strong> is shown in Fig. 1.
 <img src="/img/wa/infolist.png" alt="Info.plist Contents">
-<strong>Fig. 1:</strong> Info.plist Contents <!-- raw HTML omitted --></p>
+<strong>Fig. 1:</strong> Info.plist Contents </p>
 <p>The content&rsquo;s of WhatsApp&rsquo;s application folder is shown in Fig. 2.
 <img src="/img/wa/1.png" alt="Contents of Application Data">
-<strong>Fig. 2:</strong> Contents of Application Data <!-- raw HTML omitted --></p>
+<strong>Fig. 2:</strong> Contents of Application Data </p>
 <p>The <strong>Biz</strong> folder contains an SQLite file; which stores the details of all WhatsApp Business clients that a user has in his/her contacts. Details of such clients are stored in plain text in the SQLite file as shown in Figs. 3, 4 and 5. This details include their business names, phone numbers, business addresses, business location cooordinates, email addresses etc.
 <img src="/img/wa/wb3.png" alt="Details of WhatsApp Business Clients">
-<strong>Fig. 3:</strong> Details of WhatsApp Business Clients <!-- raw HTML omitted --></p>
+<strong>Fig. 3:</strong> Details of WhatsApp Business Clients </p>
 <p><img src="/img/wa/wb4.png" alt="Details of WhatsApp Business Clients">
-<strong>Fig. 4:</strong> Details of WhatsApp Business Clients <!-- raw HTML omitted --></p>
+<strong>Fig. 4:</strong> Details of WhatsApp Business Clients </p>
 <p><img src="/img/wa/wb5.png" alt="Details of WhatsApp Business Clients">
-<strong>Fig. 5:</strong> Details of WhatsApp Business Clients <!-- raw HTML omitted --></p>
+<strong>Fig. 5:</strong> Details of WhatsApp Business Clients </p>
 <p>It was realized that WhatsApp filters certain keywords from all messages sent/received. This is stored in an SQLite file called &ldquo;<strong>ChatSearchV5f</strong>&rdquo;. A sample content is shown in Fig. 6. As at the time of writing, it is unknown what such information is used for.
 <img src="/img/wa/fts.png" alt="Chat Search">
-<strong>Fig. 6:</strong> Chat Search <!-- raw HTML omitted --></p>
+<strong>Fig. 6:</strong> Chat Search </p>
 <p>&lsquo;<strong>Status</strong>&rsquo; images and videos are stored in the media library folder. The images have a <strong>.thumb</strong> extension whereas the videos have no file extension. It was realized that the streaming files are <strong>mp4</strong> encoded (shown in Fig. 7). Adding \textbf{.mp4} as an extension to the streaming files enables you to play them.
 <img src="/img/wa/video.png" alt="Video Extension">
-<strong>Fig. 7:</strong> Video Extension <!-- raw HTML omitted --></p>
+<strong>Fig. 7:</strong> Video Extension </p>
 <p>Chat messages are stored in &ldquo;<strong>CallHistory.sqlite</strong>&rdquo;. This SQLite file stores names of groups a user belongs to (shown in Fig. 8), messages sent to and received in the group, messages sent/received from other users (shown in Fig. 9) and links to encrypted images and videos sent/received (shown in Fig. 10 and 11).
 <img src="/img/wa/ch1.png" alt="User&rsquo;s WhatsApp Groups">
-<strong>Fig. 8:</strong> User&rsquo;s WhatsApp Groups <!-- raw HTML omitted --></p>
+<strong>Fig. 8:</strong> User&rsquo;s WhatsApp Groups </p>
 <p><img src="/img/wa/ch2.png" alt="Links to Encrypted Shared or Received Images/Documents">
-<strong>Fig. 9:</strong> Links to Encrypted Shared or Received Images/Documents <!-- raw HTML omitted --></p>
+<strong>Fig. 9:</strong> Links to Encrypted Shared or Received Images/Documents </p>
 <p><img src="/img/wa/ch3.png" alt="Chat Messages">
-<strong>Fig. 10:</strong> Chat Messages <!-- raw HTML omitted --></p>
+<strong>Fig. 10:</strong> Chat Messages </p>
 <p><img src="/img/wa/ch4.png" alt="Push Names of WhatsApp Contacts">
-<strong>Fig. 11:</strong> Push Names of WhatsApp Contacts <!-- raw HTML omitted --></p>
+<strong>Fig. 11:</strong> Push Names of WhatsApp Contacts </p>
 <p>Audio files (sent/received) are stored in \textbf{.opus} extension (shown in Fig. 12).
 <img src="/img/wa/audio.png" alt="Audio File(s)">
-<strong>Fig. 12:</strong> Audio Files(s) <!-- raw HTML omitted --></p>
+<strong>Fig. 12:</strong> Audio Files(s) </p>
 <p>WhatsApp has a privacy consent that enables them to upload all contacts on a user&rsquo;s phone to their server. This is shown in Fig. 13.
 <img src="/img/wa/ct.png" alt="Privacy Consent to upload contacts to WhatsApp&rsquo;s Server">
-<strong>Fig. 13:</strong> Privacy Consent to upload contacts to WhatsApp&rsquo;s Server <!-- raw HTML omitted --></p>
+<strong>Fig. 13:</strong> Privacy Consent to upload contacts to WhatsApp&rsquo;s Server </p>
 <p>A copy of all contacts on a user&rsquo;s phone is stored in &ldquo;<strong>ContactsV2.sqlite</strong>&rdquo;. This is shown in Fig. 14 and 15.
 <img src="/img/wa/ct1.png" alt="User&rsquo;s Contacts collected and uploaded to WhatsApp Server">
-<strong>Fig. 14:</strong> User&rsquo;s contacts collected and uploaded to WhatsApp&rsquo;s Server <!-- raw HTML omitted --></p>
+<strong>Fig. 14:</strong> User&rsquo;s contacts collected and uploaded to WhatsApp&rsquo;s Server </p>
 <p><img src="/img/wa/ct2.png" alt="User&rsquo;s Contacts collected and uploaded to WhatsApp Server">
-<strong>Fig. 15:</strong> User&rsquo;s contacts collected and uploaded to WhatsApp&rsquo;s Server <!-- raw HTML omitted --></p>
+<strong>Fig. 15:</strong> User&rsquo;s contacts collected and uploaded to WhatsApp&rsquo;s Server </p>
 <p>From the above security analysis, it can be observed that most of the data stored on the device is in plain text. Hence, it can be inferred that WhatsApp does not implement a secured on-device data storage mechanism.</p>
 <h3 id="conclusion-and-recommendation">Conclusion and Recommendation</h3>
 <p>This research analyzes how WhatsApp secures on-device data of its users. It has been demonstrated how WhatsApp&rsquo;s data is not securely stored  on end-users' devices; hence can be retrieved by an attacker who has physical access to the device.</p>
@@ -210,7 +211,7 @@
 <p>Unauthorized modification of iOS, <a href="https://support.apple.com/en-us/HT201954,">https://support.apple.com/en-us/HT201954,</a> 2020.</p>
 </li>
 </ol>
-
+-->
             </div>
         </article>
 
@@ -243,15 +244,11 @@
                 <footer class="footer">
     <div class="footer__inner">
         <div class="footer__content">
-            <span>&copy; 2021</span>
-            <span><a href="/">Jay Lux Ferro</a></span>
-            <span>SPERIXLABS</span><span><a href="/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+            <span>&copy;<a href="/">Kirtisoglu</a></span>
+            <span>Updated in March, 2021</span>
         </div>
     </div>
     <div class="footer__inner">
-        <div class="footer__content">
-            <span>Your Security</span>
-            <span>Go Player</span>
           </div>
     </div>
 </footer>
